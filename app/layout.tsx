@@ -9,8 +9,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Via Brasil - Veículos",
-  description: "Compra e venda de veículos",
+  title: "Via Brasil - Tradição em realizar sonhos",
+  description: "Mais de 30 anos de história em Ribeirão Preto. Veículos periciados, revisados e com garantia de procedência.",
 };
 
 export default function RootLayout({

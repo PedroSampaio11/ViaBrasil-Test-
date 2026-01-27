@@ -8,8 +8,12 @@ export function Header() {
     <header className="w-full bg-[#0A1628] border-b border-blue-900/20">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-20">
+
           {/* Menu Esquerdo */}
           <nav className="flex items-center gap-8">
+            <button className="text-white/90 hover:text-white transition-colors">
+              <Search size={20} />
+            </button>
             <Link
               href="/estoque"
               className="text-white/90 hover:text-white transition-colors text-sm font-medium"
@@ -52,9 +56,7 @@ export function Header() {
             >
               FALE COM CONSULTOR
             </button>
-            <button className="text-white/90 hover:text-white transition-colors">
-              <Search size={20} />
-            </button>
+
           </div>
         </div>
       </div>
