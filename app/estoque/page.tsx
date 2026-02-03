@@ -12,6 +12,7 @@ export default function EstoquePage() {
   // Dados de exemplo - depois você pode buscar de uma API
   const vehicles = [
     {
+      id: "1",
       brand: "Fiat",
       model: "Pulse 1.4t",
       year: "2024/2025",
@@ -21,6 +22,7 @@ export default function EstoquePage() {
       isNew: true,
     },
     {
+      id: "2",
       brand: "Fiat",
       model: "Pulse 1.4t",
       year: "2024/2025",
@@ -30,6 +32,7 @@ export default function EstoquePage() {
       isNew: true,
     },
     {
+      id: "3",
       brand: "Fiat",
       model: "Pulse 1.4t",
       year: "2024/2025",
@@ -39,6 +42,7 @@ export default function EstoquePage() {
       isNew: true,
     },
     {
+      id: "4",
       brand: "Fiat",
       model: "Pulse 1.4t",
       year: "2024/2025",
@@ -48,6 +52,7 @@ export default function EstoquePage() {
       isNew: true,
     },
     {
+      id: "5",
       brand: "Fiat",
       model: "Pulse 1.4t",
       year: "2024/2025",
@@ -57,6 +62,7 @@ export default function EstoquePage() {
       isNew: true,
     },
     {
+      id: "6",
       brand: "Fiat",
       model: "Pulse 1.4t",
       year: "2024/2025",

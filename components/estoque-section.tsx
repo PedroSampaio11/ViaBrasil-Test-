@@ -1,5 +1,6 @@
 "use client"
 
+import Link from "next/link"
 import { VehicleCard } from "./vehicle-card"
 import { ChevronDown } from "lucide-react"
 
@@ -7,6 +8,7 @@ export function EstoqueSection() {
   // Dados de exemplo - depois você pode buscar de uma API
   const vehicles = [
     {
+      id: "1",
       brand: "Fiat",
       model: "Pulse 1.4",
       year: "2024/2025",
@@ -16,6 +18,7 @@ export function EstoqueSection() {
       isNew: true,
     },
     {
+      id: "2",
       brand: "Fiat",
       model: "Pulse 1.4",
       year: "2024/2025",
@@ -25,6 +28,7 @@ export function EstoqueSection() {
       isNew: true,
     },
     {
+      id: "3",
       brand: "Fiat",
       model: "Pulse 1.4",
       year: "2024/2025",
@@ -62,13 +66,16 @@ export function EstoqueSection() {
 
         {/* Botão Ver Mais */}
         <div className="flex justify-center">
-          <button className="group flex items-center gap-3 px-8 py-4 bg-white/10 text-white rounded-full font-semibold hover:bg-white/20 transition-all hover:shadow-lg border border-white/20">
+          <Link
+            href="/estoque"
+            className="group flex items-center gap-3 px-8 py-4 bg-white/10 text-white rounded-full font-semibold hover:bg-white/20 transition-all hover:shadow-lg border border-white/20"
+          >
             Ver mais veículos
             <div className="flex flex-col gap-0.5">
               <ChevronDown size={16} className="group-hover:translate-y-0.5 transition-transform" />
               <ChevronDown size={16} className="group-hover:translate-y-0.5 transition-transform -mt-2" />
             </div>
-          </button>
+          </Link>
         </div>
       </div>
     </section>
