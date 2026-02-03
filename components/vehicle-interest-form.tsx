@@ -29,11 +29,11 @@ export function VehicleInterestForm() {
       <div className="container mx-auto px-4">
         <div className="max-w-5xl mx-auto">
           {/* Header */}
-          <div className="mb-12">
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+          <div className="mb-8 md:mb-12">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">
               Não encontrou o modelo que estava buscando?
             </h2>
-            <p className="text-xl text-white/80">
+            <p className="text-sm sm:text-base md:text-lg lg:text-xl text-white/80">
               Deixe agora o seu contato para ser notificado(a) quando chegar
             </p>
           </div>
@@ -45,7 +45,7 @@ export function VehicleInterestForm() {
               <div>
                 <label
                   htmlFor="nome"
-                  className="block text-white font-medium mb-2 text-lg"
+                  className="block text-white font-medium mb-2 text-sm sm:text-base md:text-lg"
                 >
                   Nome
                 </label>
@@ -65,7 +65,7 @@ export function VehicleInterestForm() {
               <div>
                 <label
                   htmlFor="email"
-                  className="block text-white font-medium mb-2 text-lg"
+                  className="block text-white font-medium mb-2 text-sm sm:text-base md:text-lg"
                 >
                   Email
                 </label>
@@ -85,7 +85,7 @@ export function VehicleInterestForm() {
               <div>
                 <label
                   htmlFor="telefone"
-                  className="block text-white font-medium mb-2 text-lg"
+                  className="block text-white font-medium mb-2 text-sm sm:text-base md:text-lg"
                 >
                   Telefone
                 </label>
@@ -105,7 +105,7 @@ export function VehicleInterestForm() {
               <div>
                 <label
                   htmlFor="modelo"
-                  className="block text-white font-medium mb-2 text-lg"
+                  className="block text-white font-medium mb-2 text-sm sm:text-base md:text-lg"
                 >
                   Modelo Desejado
                 </label>
@@ -144,7 +144,7 @@ export function VehicleInterestForm() {
             <div className="flex justify-end pt-4">
               <button
                 type="submit"
-                className="px-12 py-4 bg-yellow-500 hover:bg-yellow-600 text-[#0A1628] rounded-[22px] font-black text-2xl transition-colors shadow-lg shadow-yellow-500/20"
+                className="px-8 py-3 md:px-12 md:py-4 bg-yellow-500 hover:bg-yellow-600 text-[#0A1628] rounded-[22px] font-black text-lg sm:text-xl md:text-2xl transition-colors shadow-lg shadow-yellow-500/20"
               >
                 ENVIAR
               </button>
