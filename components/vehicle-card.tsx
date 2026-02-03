@@ -42,18 +42,18 @@ export function VehicleCard({
       <div className="p-5 space-y-3">
         {/* Brand */}
         <div>
-          <h3 className="text-yellow-500 font-bold text-lg">{brand}</h3>
+          <h3 className="text-yellow-500 font-bold text-base sm:text-lg">{brand}</h3>
         </div>
 
         {/* Model */}
         <div>
-          <p className="text-white font-semibold text-base">{model}</p>
-          <p className="text-white/60 text-sm">{year}</p>
+          <p className="text-white font-semibold text-sm sm:text-base">{model}</p>
+          <p className="text-white/60 text-xs sm:text-sm">{year}</p>
         </div>
 
         {/* Price */}
         <div className="pt-2 border-t border-white/10">
-          <p className="text-yellow-500 font-bold text-2xl">{price}</p>
+          <p className="text-yellow-500 font-bold text-xl sm:text-2xl">{price}</p>
         </div>
 
         {/* Tag 0km */}

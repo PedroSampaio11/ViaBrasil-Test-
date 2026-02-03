@@ -36,17 +36,17 @@ export function EstoqueSection() {
   ]
 
   return (
-    <section className="py-20 bg-[#0A1628]">
+    <section className="py-4 sm:py-20 bg-[#0A1628]">
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="mb-12">
           <div className="inline-block px-4 py-1 bg-yellow-500 text-black text-sm font-semibold rounded-full mb-4">
             ESTOQUE
           </div>
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">
             Mova Sua Paixão
           </h2>
-          <p className="text-lg text-white/80 max-w-2xl">
+          <p className="text-sm sm:text-base md:text-lg text-white/80 max-w-2xl">
             Escolha o modelo ideal para o seu estilo de vida.
             O propósito da Via Brasil é ser a melhor escolha em automóveis para
             seus clientes e fazer parte dos momentos especiais da sua vida

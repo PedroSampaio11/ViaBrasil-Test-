@@ -4,8 +4,7 @@ import { MessageCircle } from "lucide-react"
 
 export function WhatsAppButton() {
   const handleClick = () => {
-    // Substitua pelo número real da Via Brasil
-    const phoneNumber = "5516999999999" // Formato: código país + DDD + número
+    const phoneNumber = "5511942798763"
     const message = "Olá! Gostaria de mais informações sobre os veículos."
     const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`
     window.open(url, "_blank")
@@ -18,8 +17,6 @@ export function WhatsAppButton() {
       aria-label="Fale conosco no WhatsApp"
     >
       <MessageCircle className="w-7 h-7 text-white" fill="currentColor" />
-      
-      {/* Tooltip */}
       <div className="absolute right-full mr-3 px-3 py-2 bg-gray-900 text-white text-sm rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
         Fale conosco!
         <div className="absolute top-1/2 -right-1 -translate-y-1/2 w-2 h-2 bg-gray-900 rotate-45" />
@@ -27,4 +24,5 @@ export function WhatsAppButton() {
     </button>
   )
 }
+
 
