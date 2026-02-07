@@ -1,43 +1,36 @@
 "use client"
 
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import { VehicleCard } from "./vehicle-card"
 import { ChevronDown } from "lucide-react"
+import { mapVeiculoToCard, VehicleCardData } from "@/lib/utils/vehicle-mapper"
+import { VeiculoRetornoModel } from "@/lib/types/autocerto"
 
 export function EstoqueSection() {
-  // Dados de exemplo - depois você pode buscar de uma API
-  const vehicles = [
-    {
-      id: "1",
-      brand: "Fiat",
-      model: "Pulse 1.4",
-      year: "2024/2025",
-      price: "R$ 100.999,00",
-      imageUrl: "/images/via-brasil-carro.png",
-      badge: "0km",
-      isNew: true,
-    },
-    {
-      id: "2",
-      brand: "Fiat",
-      model: "Pulse 1.4",
-      year: "2024/2025",
-      price: "R$ 100.999,00",
-      imageUrl: "/images/via-brasil-carro.png",
-      badge: "0km",
-      isNew: true,
-    },
-    {
-      id: "3",
-      brand: "Fiat",
-      model: "Pulse 1.4",
-      year: "2024/2025",
-      price: "R$ 100.999,00",
-      imageUrl: "/images/via-brasil-carro.png",
-      badge: "0km",
-      isNew: true,
-    },
-  ]
+  const [vehicles, setVehicles] = useState<VehicleCardData[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    async function fetchVehicles() {
+      try {
+        const response = await fetch("/api/veiculos")
+        if (response.ok) {
+          const data: VeiculoRetornoModel[] = await response.json()
+          // Limitar a 3 veículos para a home
+          const limitedData = data.slice(0, 3)
+          const mappedVehicles = limitedData.map(mapVeiculoToCard)
+          setVehicles(mappedVehicles)
+        }
+      } catch (error) {
+        console.error("Erro ao buscar veículos:", error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchVehicles()
+  }, [])
 
   return (
     <section className="py-4 sm:py-20 bg-[#0A1628]">
@@ -58,11 +51,22 @@ export function EstoqueSection() {
         </div>
 
         {/* Grid de Veículos */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-          {vehicles.map((vehicle, index) => (
-            <VehicleCard key={index} {...vehicle} />
-          ))}
-        </div>
+        {loading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+            {[1, 2, 3].map((i) => (
+              <div
+                key={i}
+                className="bg-[#0A1628] rounded-lg border-2 border-yellow-500/50 h-[500px] animate-pulse"
+              />
+            ))}
+          </div>
+        ) : vehicles.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+            {vehicles.map((vehicle) => (
+              <VehicleCard key={vehicle.id} {...vehicle} />
+            ))}
+          </div>
+        ) : null}
 
         {/* Botão Ver Mais */}
         <div className="flex justify-center">

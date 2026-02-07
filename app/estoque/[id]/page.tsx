@@ -1,105 +1,103 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect, use } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { VehicleCard } from "@/components/vehicle-card"
 import { VehicleInterestForm } from "@/components/vehicle-interest-form"
-import { ChevronLeft, ChevronRight, ArrowRight } from "lucide-react"
+import { ChevronLeft, ChevronRight, ArrowRight, Loader2 } from "lucide-react"
+import { mapVeiculoToCard, mapVeiculoToDetail, VehicleDetailData, VehicleCardData } from "@/lib/utils/vehicle-mapper"
+import { VeiculoRetornoModel } from "@/lib/types/autocerto"
 
-// Dados mockados - depois você pode buscar de uma API baseado no ID
-const vehicleData = {
-  id: "1",
-  brand: "Fiat",
-  model: "Pulse",
-  year: "2023/2024",
-  km: "22.000km",
-  price: "R$ 109.999,99",
-  version: "1.3 FLEX DRIVE MANUAL",
-  fuel: "Gasolina e Álcool",
-  plate: "Final 4",
-  transmission: "Manual",
-  doors: "4",
-  vehicleModel: "PULSE",
-  images: [
-    "/images/via-brasil-carro.png",
-    "/images/via-brasil-carro.png",
-    "/images/via-brasil-carro.png",
-    "/images/via-brasil-carro.png",
-  ],
-  description: "O Fiat Pulse é um SUV compacto que combina design moderno, tecnologia avançada e economia. Ideal para quem busca versatilidade e conforto no dia a dia.",
-  optionals: [
-    "Air bag do motorista",
-    "Air bag duplo",
-    "Alarme",
-    "Ar condicionado digital",
-    "Ar quente",
-    "Banco bi-partido",
-    "Comando de áudio e telefone no volante",
-    "Computador de bordo",
-    "Controle automático de velocidade",
-    "Controle de estabilidade",
-    "Controle de tração",
-    "Desembaçador traseiro",
-    "Direção Elétrica",
-    "Distribuição eletrônica de frenagem",
-    "Encosto de cabeça traseiro",
-    "Freio ABS",
-    "GPS",
-    "Kit Multimídia",
-    "Limpador traseiro",
-    "Pára-choques na cor do veículo",
-    "Retrovisores elétricos",
-    "Rodas de liga leve",
-    "Travas elétricas",
-    "Vidros elétricos",
-  ],
-  observations: "Veículo em excelente estado de conservação, revisado e com garantia de procedência.",
-}
-
-const otherVehicles = [
-  {
-    brand: "Fiat",
-    model: "Pulse 1.4t",
-    year: "2024/2025",
-    price: "R$ 109.999,99",
-    imageUrl: "/images/via-brasil-carro.png",
-    badge: "0km",
-    isNew: true,
-    id: "2",
-  },
-  {
-    brand: "Fiat",
-    model: "Pulse 1.4t",
-    year: "2024/2025",
-    price: "R$ 109.999,99",
-    imageUrl: "/images/via-brasil-carro.png",
-    badge: "0km",
-    isNew: true,
-    id: "3",
-  },
-  {
-    brand: "Fiat",
-    model: "Pulse 1.4t",
-    year: "2024/2025",
-    price: "R$ 109.999,99",
-    imageUrl: "/images/via-brasil-carro.png",
-    badge: "0km",
-    isNew: true,
-    id: "4",
-  },
-]
-
-export default function VehicleDetailPage({ params }: { params: { id: string } }) {
+export default function VehicleDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = use(params)
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const [activeTab, setActiveTab] = useState<"descricao" | "opcionais" | "observacoes">("opcionais")
+  const [vehicleData, setVehicleData] = useState<VehicleDetailData | null>(null)
+  const [otherVehicles, setOtherVehicles] = useState<VehicleCardData[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  // Buscar veículo e outros veículos
+  useEffect(() => {
+    async function fetchVehicle() {
+      try {
+        setLoading(true)
+        setError(null)
+
+        // Buscar veículo
+        const vehicleResponse = await fetch(`/api/veiculos/${id}`)
+        if (!vehicleResponse.ok) {
+          if (vehicleResponse.status === 404) {
+            throw new Error("Veículo não encontrado")
+          }
+          throw new Error("Erro ao buscar veículo")
+        }
+
+        const veiculo: VeiculoRetornoModel = await vehicleResponse.json()
+        const mappedVehicle = mapVeiculoToDetail(veiculo)
+        setVehicleData(mappedVehicle)
+
+        // Resetar índice de imagem quando mudar o veículo
+        setCurrentImageIndex(0)
+
+        // Buscar outros veículos (excluindo o atual)
+        const estoqueResponse = await fetch("/api/veiculos")
+        if (estoqueResponse.ok) {
+          const estoque: VeiculoRetornoModel[] = await estoqueResponse.json()
+          const outros = estoque
+            .filter((v) => v.Codigo.toString() !== id)
+            .slice(0, 3)
+            .map(mapVeiculoToCard)
+          setOtherVehicles(outros)
+        }
+      } catch (err: any) {
+        console.error("Erro ao buscar veículo:", err)
+        setError(err.message || "Erro ao carregar veículo")
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    if (id) {
+      fetchVehicle()
+    }
+  }, [id])
 
   const nextImage = () => {
-    setCurrentImageIndex((prev) => (prev + 1) % vehicleData.images.length)
+    if (vehicleData) {
+      setCurrentImageIndex((prev) => (prev + 1) % vehicleData.images.length)
+    }
   }
 
   const prevImage = () => {
-    setCurrentImageIndex((prev) => (prev - 1 + vehicleData.images.length) % vehicleData.images.length)
+    if (vehicleData) {
+      setCurrentImageIndex((prev) => (prev - 1 + vehicleData.images.length) % vehicleData.images.length)
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#0A1628] flex items-center justify-center">
+        <Loader2 className="w-12 h-12 text-yellow-500 animate-spin" />
+      </div>
+    )
+  }
+
+  if (error || !vehicleData) {
+    return (
+      <div className="min-h-screen bg-[#0A1628] flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-400 text-xl mb-4">{error || "Veículo não encontrado"}</p>
+          <Link
+            href="/estoque"
+            className="px-6 py-3 bg-yellow-500 hover:bg-yellow-600 text-black rounded-full font-semibold transition-colors"
+          >
+            Voltar para o estoque
+          </Link>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -177,7 +175,7 @@ export default function VehicleDetailPage({ params }: { params: { id: string } }
               {/* Imagem Principal */}
               <div className="relative h-[400px] sm:h-[500px] rounded-lg overflow-hidden mb-4 bg-gradient-to-b from-gray-800 to-gray-900">
                 <Image
-                  src={vehicleData.images[currentImageIndex]}
+                  src={vehicleData.images[currentImageIndex] || "/images/via-brasil-carro.png"}
                   alt={`${vehicleData.brand} ${vehicleData.model}`}
                   fill
                   className="object-contain p-4"
@@ -201,26 +199,27 @@ export default function VehicleDetailPage({ params }: { params: { id: string } }
               </div>
 
               {/* Thumbnails */}
-              <div className="grid grid-cols-4 gap-2">
-                {vehicleData.images.map((image, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setCurrentImageIndex(index)}
-                    className={`relative h-20 sm:h-24 rounded-lg overflow-hidden border-2 transition-all ${
-                      currentImageIndex === index
+              {vehicleData.images.length > 0 && (
+                <div className="grid grid-cols-4 gap-2">
+                  {vehicleData.images.map((image, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setCurrentImageIndex(index)}
+                      className={`relative h-20 sm:h-24 rounded-lg overflow-hidden border-2 transition-all ${currentImageIndex === index
                         ? "border-yellow-500"
                         : "border-white/20 hover:border-white/40"
-                    }`}
-                  >
-                    <Image
-                      src={image}
-                      alt={`Thumbnail ${index + 1}`}
-                      fill
-                      className="object-cover"
-                    />
-                  </button>
-                ))}
-              </div>
+                        }`}
+                    >
+                      <Image
+                        src={image}
+                        alt={`Thumbnail ${index + 1}`}
+                        fill
+                        className="object-cover"
+                      />
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
 
@@ -232,31 +231,28 @@ export default function VehicleDetailPage({ params }: { params: { id: string } }
                 <div className="space-y-2">
                   <button
                     onClick={() => setActiveTab("descricao")}
-                    className={`w-full text-left px-4 py-3 rounded-lg transition-all ${
-                      activeTab === "descricao"
-                        ? "bg-yellow-500/20 text-yellow-500 border-l-4 border-green-500"
-                        : "text-white/60 hover:text-white hover:bg-white/5"
-                    }`}
+                    className={`w-full text-left px-4 py-3 rounded-lg transition-all ${activeTab === "descricao"
+                      ? "bg-yellow-500/20 text-yellow-500 border-l-4 border-green-500"
+                      : "text-white/60 hover:text-white hover:bg-white/5"
+                      }`}
                   >
                     Descrição
                   </button>
                   <button
                     onClick={() => setActiveTab("opcionais")}
-                    className={`w-full text-left px-4 py-3 rounded-lg transition-all ${
-                      activeTab === "opcionais"
-                        ? "bg-yellow-500/20 text-yellow-500 border-l-4 border-green-500"
-                        : "text-white/60 hover:text-white hover:bg-white/5"
-                    }`}
+                    className={`w-full text-left px-4 py-3 rounded-lg transition-all ${activeTab === "opcionais"
+                      ? "bg-yellow-500/20 text-yellow-500 border-l-4 border-green-500"
+                      : "text-white/60 hover:text-white hover:bg-white/5"
+                      }`}
                   >
                     Opcionais
                   </button>
                   <button
                     onClick={() => setActiveTab("observacoes")}
-                    className={`w-full text-left px-4 py-3 rounded-lg transition-all ${
-                      activeTab === "observacoes"
-                        ? "bg-yellow-500/20 text-yellow-500 border-l-4 border-green-500"
-                        : "text-white/60 hover:text-white hover:bg-white/5"
-                    }`}
+                    className={`w-full text-left px-4 py-3 rounded-lg transition-all ${activeTab === "observacoes"
+                      ? "bg-yellow-500/20 text-yellow-500 border-l-4 border-green-500"
+                      : "text-white/60 hover:text-white hover:bg-white/5"
+                      }`}
                   >
                     Observações Adicionais
                   </button>
@@ -296,18 +292,22 @@ export default function VehicleDetailPage({ params }: { params: { id: string } }
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-6">
               Veja outros modelos
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
-              {otherVehicles.map((vehicle) => (
-                <Link key={vehicle.id} href={`/estoque/${vehicle.id}`}>
-                  <div className="group relative">
-                    <VehicleCard {...vehicle} />
-                    <div className="absolute bottom-4 right-4 w-10 h-10 rounded-full bg-yellow-500 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                      <ArrowRight className="w-5 h-5 text-black" />
+            {otherVehicles.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+                {otherVehicles.map((vehicle) => (
+                  <Link key={vehicle.id} href={`/estoque/${vehicle.id}`}>
+                    <div className="group relative">
+                      <VehicleCard {...vehicle} />
+                      <div className="absolute bottom-4 right-4 w-10 h-10 rounded-full bg-yellow-500 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                        <ArrowRight className="w-5 h-5 text-black" />
+                      </div>
                     </div>
-                  </div>
-                </Link>
-              ))}
-            </div>
+                  </Link>
+                ))}
+              </div>
+            ) : (
+              <p className="text-white/60 text-center py-8">Nenhum outro veículo disponível no momento.</p>
+            )}
             <div className="flex justify-center">
               <Link
                 href="/estoque"
@@ -320,7 +320,7 @@ export default function VehicleDetailPage({ params }: { params: { id: string } }
 
           {/* Formulário de Interesse */}
           <div className="mb-12">
-            <VehicleInterestForm />
+            <VehicleInterestForm codigoVeiculo={parseInt(id)} />
           </div>
         </div>
       </section>

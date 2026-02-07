@@ -1,20 +1,63 @@
 "use client"
 
 import { useState } from "react"
-import { X } from "lucide-react"
+import { Loader2 } from "lucide-react"
 
-export function VehicleInterestForm() {
+interface VehicleInterestFormProps {
+  codigoVeiculo?: number
+}
+
+export function VehicleInterestForm({ codigoVeiculo }: VehicleInterestFormProps) {
   const [formData, setFormData] = useState({
     nome: "",
     email: "",
     telefone: "",
     modelo: "",
   })
+  const [loading, setLoading] = useState(false)
+  const [success, setSuccess] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // Aqui você pode adicionar a lógica de envio do formulário
-    console.log("Formulário enviado:", formData)
+    setLoading(true)
+    setError(null)
+    setSuccess(false)
+
+    try {
+      const response = await fetch("/api/leads", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          nome: formData.nome,
+          email: formData.email,
+          telefone: formData.telefone,
+          modeloDesejado: formData.modelo,
+          codigoVeiculo: codigoVeiculo,
+          interesse: 2, // 2 = Seminovos
+        }),
+      })
+
+      if (!response.ok) {
+        const data = await response.json()
+        throw new Error(data.error || "Erro ao enviar formulário")
+      }
+
+      setSuccess(true)
+      setFormData({
+        nome: "",
+        email: "",
+        telefone: "",
+        modelo: "",
+      })
+    } catch (err: any) {
+      console.error("Erro ao enviar lead:", err)
+      setError(err.message || "Erro ao enviar formulário. Tente novamente.")
+    } finally {
+      setLoading(false)
+    }
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -140,13 +183,31 @@ export function VehicleInterestForm() {
               </p>
             </div>
 
+            {/* Success Message */}
+            {success && (
+              <div className="bg-green-500/10 border border-green-500/50 rounded-lg p-4 mb-4">
+                <p className="text-green-400 text-center">
+                  Formulário enviado com sucesso! Entraremos em contato em breve.
+                </p>
+              </div>
+            )}
+
+            {/* Error Message */}
+            {error && (
+              <div className="bg-red-500/10 border border-red-500/50 rounded-lg p-4 mb-4">
+                <p className="text-red-400 text-center">{error}</p>
+              </div>
+            )}
+
             {/* Submit Button */}
             <div className="flex justify-end pt-4">
               <button
                 type="submit"
-                className="px-8 py-3 md:px-12 md:py-4 bg-yellow-500 hover:bg-yellow-600 text-[#0A1628] rounded-[22px] font-black text-lg sm:text-xl md:text-2xl transition-colors shadow-lg shadow-yellow-500/20"
+                disabled={loading}
+                className="px-8 py-3 md:px-12 md:py-4 bg-yellow-500 hover:bg-yellow-600 disabled:opacity-50 disabled:cursor-not-allowed text-[#0A1628] rounded-[22px] font-black text-lg sm:text-xl md:text-2xl transition-colors shadow-lg shadow-yellow-500/20 flex items-center gap-2"
               >
-                ENVIAR
+                {loading && <Loader2 className="w-5 h-5 animate-spin" />}
+                {loading ? "ENVIANDO..." : "ENVIAR"}
               </button>
             </div>
           </form>
