@@ -68,7 +68,7 @@ export function VehicleInterestForm({ codigoVeiculo }: VehicleInterestFormProps)
   }
 
   return (
-    <section className="py-4 sm:py-20 bg-[#0A1628]">
+    <section className="py-4 sm:py-20 bg-[#00020C]">
       <div className="container mx-auto px-4">
         <div className="max-w-5xl mx-auto">
           {/* Header */}

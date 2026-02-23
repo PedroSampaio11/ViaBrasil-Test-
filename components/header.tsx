@@ -12,7 +12,7 @@ import {
 export function Header() {
   return (
     <>
-      <header className="w-full bg-[#0A1628] border-b border-blue-900/20 relative z-50">
+      <header className="w-full bg-[#00020C] border-b border-blue-900/20 relative z-50">
         <div className="container mx-auto px-4">
           <div className="flex items-center py-4 justify-between">
             {/* Menu Esquerdo - Desktop */}

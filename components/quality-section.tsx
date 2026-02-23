@@ -23,10 +23,10 @@ export function QualitySection() {
   ]
 
   return (
-    <section className="relative min-h-[700px] w-full bg-[#0A1628]">
+    <section className="relative min-h-[700px] w-full bg-[#00020C]">
       <div className="absolute inset-0 flex">
         {/* Lado esquerdo - gradiente escuro */}
-        <div className="flex-1 bg-gradient-to-r from-[#0A1628] via-[#0A1628]/90 to-transparent" />
+        <div className="flex-1 bg-gradient-to-r from-[#00020C] via-[#0A1628]/90 to-transparent" />
 
         {/* Lado direito - imagem com border-radius */}
         <div className="w-full md:w-1/2 h-[600px] lg:w-2/5 relative overflow-hidden rounded-r-[22px] relative sm:right-20">

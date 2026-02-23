@@ -78,7 +78,7 @@ export default function VehicleDetailPage({ params }: { params: Promise<{ id: st
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#0A1628] flex items-center justify-center">
+      <div className="min-h-screen bg-[#00020C] flex items-center justify-center">
         <Loader2 className="w-12 h-12 text-yellow-500 animate-spin" />
       </div>
     )
@@ -86,7 +86,7 @@ export default function VehicleDetailPage({ params }: { params: Promise<{ id: st
 
   if (error || !vehicleData) {
     return (
-      <div className="min-h-screen bg-[#0A1628] flex items-center justify-center">
+      <div className="min-h-screen bg-[#00020C] flex items-center justify-center">
         <div className="text-center">
           <p className="text-red-400 text-xl mb-4">{error || "Veículo não encontrado"}</p>
           <Link

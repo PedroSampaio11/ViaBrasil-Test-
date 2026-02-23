@@ -33,7 +33,7 @@ export default function VendaPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#0A1628] text-white">
+    <main className="min-h-screen bg-[#00020C] text-white">
       {/* Hero – mesmo modelo do contato */}
       <section className="relative h-[300px] sm:h-[600px] w-full overflow-hidden">
         <div className="absolute inset-0">
